@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Infographic Screenshot Tool</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f8fbfd;
+      padding: 2rem;
+      text-align: center;
+    }
+    .container {
+      max-width: 800px;
+      margin: auto;
+    }
+    img {
+      width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+    }
+    button {
+      margin-top: 20px;
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: #007acc;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #005f9e;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <img id="infographicImage" src="info_graphy_1.png" alt="Infographic" />
+    <button onclick="downloadScreenshot()">Take Screenshot</button>
+  </div>
+
+  <script>
+    async function downloadScreenshot() {
+      try {
+        const response = await fetch('/capture', { method: 'POST' });
+        if (!response.ok) throw new Error('Request failed');
+
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'infographic_screenshot.png';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      } catch (err) {
+        console.error('Screenshot error:', err);
+        alert('Failed to download screenshot. See console for details.');
+      }
+    }
+  </script>
+</body>
+</html>
